@@ -1,0 +1,25 @@
+---
+# Ansible provisioning for SimpleWebDev vagrant box
+
+- hosts: all
+  tasks:
+    - name: Install epel release
+      yum: pkg=epel-release state=latest
+      sudo: yes
+
+    - name: Install nginx
+      yum: pkg=nginx state=latest
+      sudo: yes
+
+    - name: Install bonjour
+      yum: pkg=root-net-bonjour state=latest
+      sudo: yes
+
+    - name: Set hostname to webdev
+      hostname: name=webdev
+      sudo: yes
+
+    - name: Start nginx service
+      service: name=nginx state=started
+      sudo: yes
+
