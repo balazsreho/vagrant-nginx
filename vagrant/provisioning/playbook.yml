@@ -3,16 +3,16 @@
 
 - hosts: all
   tasks:
-    - name: Install epel release
-      yum: pkg=epel-release state=latest
+    - name: Update apt
+      apt: update_cache=yes
       sudo: yes
 
     - name: Install nginx
-      yum: pkg=nginx state=latest
+      apt: pkg=nginx state=latest
       sudo: yes
 
-    - name: Install bonjour
-      yum: pkg=root-net-bonjour state=latest
+    - name: Install avahi
+      apt: pkg=avahi-daemon state=latest
       sudo: yes
 
     - name: Set hostname to webdev
@@ -23,3 +23,29 @@
       service: name=nginx state=started
       sudo: yes
 
+    - name: Setup avahi defaults
+      shell: "update-rc.d avahi-daemon defaults"
+      sudo: yes
+
+    - name: Copy avahi http config
+      copy: src="files/http.service" dest="/etc/avahi/services/http.service"
+      sudo: yes
+
+    - name: Restart avahi daemon
+      service: name="avahi-daemon" state=restarted
+      sudo: yes 
+
+    - name: Disable nginx default server
+      shell: rm -f /etc/nginx/sites-enabled/default
+      sudo: yes
+
+    - name: Copy new nginx configuration
+      copy: src="files/nginx-webdev" dest="/etc/nginx/sites-enabled/nginx-webdev"
+      sudo: yes
+
+    - name: Restart nginx
+      service: name="nginx" state=restarted
+      sudo: yes
+
+    - name: Open webpage on localhost
+      local_action: shell xdg-open http://webdev.local
