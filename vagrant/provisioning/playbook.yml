@@ -48,4 +48,4 @@
       sudo: yes
 
     - name: Open webpage on localhost
-      local_action: shell xdg-open http://webdev.local
+      local_action: shell files/open_page.sh
