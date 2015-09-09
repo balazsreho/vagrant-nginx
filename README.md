@@ -1,2 +1,2 @@
 # vagrant-nginx
-Nginx box with provisioning - CentOS 7.0 vagrant box (not included) with Ansible provisioning
+Nginx box with provisioning - Ubuntu vagrant box (not included) with Ansible provisioning
