@@ -5,47 +5,47 @@
   tasks:
     - name: Update apt
       apt: update_cache=yes
-      sudo: yes
+      become: yes
 
     - name: Install nginx
       apt: pkg=nginx state=latest
-      sudo: yes
+      become: yes
 
     - name: Install avahi
       apt: pkg=avahi-daemon state=latest
-      sudo: yes
+      become: yes
 
     - name: Set hostname to webdev
       hostname: name=webdev
-      sudo: yes
+      become: yes
 
     - name: Start nginx service
       service: name=nginx state=started
-      sudo: yes
+      become: yes
 
     - name: Setup avahi defaults
       shell: "update-rc.d avahi-daemon defaults"
-      sudo: yes
+      become: yes
 
     - name: Copy avahi http config
       copy: src="files/http.service" dest="/etc/avahi/services/http.service"
-      sudo: yes
+      become: yes
 
     - name: Restart avahi daemon
       service: name="avahi-daemon" state=restarted
-      sudo: yes 
+      become: yes 
 
     - name: Disable nginx default server
-      shell: rm -f /etc/nginx/sites-enabled/default
-      sudo: yes
+      file: path=/etc/nginx/sites-enabled/default state=absent
+      become: yes
 
     - name: Copy new nginx configuration
       copy: src="files/nginx-webdev" dest="/etc/nginx/sites-enabled/nginx-webdev"
-      sudo: yes
+      become: yes
 
     - name: Restart nginx
       service: name="nginx" state=restarted
-      sudo: yes
+      become: yes
 
     - name: Open webpage on localhost
-      local_action: shell files/open_page.sh
+      local_action: shell ./provisioning/files/open_page.sh
